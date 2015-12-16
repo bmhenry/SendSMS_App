@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="gracefulcamel.sendsms" >
+
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+        <activity android:name=".MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        //http://stackoverflow.com/questions/7089313/android-listen-for-incoming-sms-messages
+        // uses SmsListener
+        // checks that whoever sent the broadcast has the proper permissions
+        <receiver
+            android:name=".SmsListener"
+            android:permission="android.permission.BROADCAST_SMS"
+            android:exported="true"
+            android:enabled="false"> // starts disabled, enabled with in-app button
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+        //http://developer.android.com/training/run-background-service/create-service.html
+        // uses GracefulSmsService
+        <!--<service
+            android:name=".GracefulSmsService"
+            android:exported="false"/>-->
+    </application>
+
+</manifest>

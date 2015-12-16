@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Text From Your Computer"
+        android:id="@+id/welcomeLabel"
+        android:layout_alignTop="@+id/snackbarPosition"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/explanationString"
+        android:id="@+id/explanationLabel"
+        android:layout_below="@+id/welcomeLabel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/disclaimerString"
+        android:id="@+id/disclaimerLabel"
+        android:layout_below="@+id/enableToggle"
+        android:layout_alignStart="@+id/explanationLabel"
+        android:layout_marginTop="53dp" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/enableToggle"
+        android:checked="false"
+        android:layout_marginTop="45dp"
+        android:textOn="ENABLED"
+        android:textOff="DISABLED"
+        android:layout_below="@+id/explanationLabel"
+        android:layout_centerHorizontal="true"
+        android:nestedScrollingEnabled="false"
+        android:textSize="18sp"
+        android:padding="18dp" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/snackbarPosition" />
+
+</RelativeLayout>

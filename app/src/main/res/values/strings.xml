@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">GracefulSMS</string>
+    <string name="explanationString">
+        SendSMS allows you to sync your text messages with your computer with the corresponding
+        computer client. Your data stays within the same network as the computer you\'re synced to.
+    </string>
+    <string name="disclaimerString">
+        SendSMS must be enabled and given the proper permissions to work:\n
+        - SMS permissions to be told when you get or send messages\n
+        - Contacts to match the texts with the person you\'re messaging
+        - Internet to then send this to your computer over the local network
+    </string>
+    <string name="permissionBar">Permissions are required to forward texts</string>
+    <string name="noPermissionAlert">Enable permissions in Settings to continue</string>
+    <string name="yesPermissionAlert">Permissions granted</string>
+
+    <string name="choose">CHOOSE</string>
+</resources>
