@@ -3,6 +3,7 @@ package gracefulcamel.sendsms;
 import android.util.Log;
 
 import java.io.DataOutputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
@@ -36,7 +37,7 @@ public class TcpClient implements Runnable {
     @Override
     public void run() {
         start();
-        Log.i("GracefulSMS TcpClient", "Sending data");
+        Log.i("GracefulSMS TcpClient", "Sending " + data);
         send(data);
         close();
     }
@@ -61,21 +62,25 @@ public class TcpClient implements Runnable {
     }
 
     public void send(String str) {
-        try {
-            dataStream.writeUTF(str);
-        } catch (Exception e) {
-            Log.i("GracefulSMS TcpClient", "Exception -- " + e);
+        if (started) {
+            try {
+                dataStream.writeBytes(str);
+            } catch (Exception e) {
+                Log.i("GracefulSMS TcpClient", "Exception -- " + e);
+            }
         }
     }
 
     public void close() {
-        try {
-            dataStream.close();
-            socket.close();
-            started = false;
-        } catch (Exception e) {
-            Log.i("GracefulSMS TcpClient", "Exception -- " + e);
-            started = false;
+        if (started) {
+            try {
+                dataStream.close();
+                socket.close();
+                started = false;
+            } catch (Exception e) {
+                Log.i("GracefulSMS TcpClient", "Exception -- " + e);
+                started = false;
+            }
         }
     }
 
