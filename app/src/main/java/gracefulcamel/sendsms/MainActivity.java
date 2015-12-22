@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ID for sms permission
     private static final int ID_RECEIVE_SMS = 0;
-    String[] PERMISSIONS = new String[] {Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS};
+    String[] PERMISSIONS = new String[] {Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS};
 
     // layout of the activity
     private View layout;
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 smsReceiver(enabled);
+                smsService(enabled);
             }
         });
     }
@@ -103,7 +104,18 @@ public class MainActivity extends AppCompatActivity {
         PackageManager pm = MainActivity.this.getPackageManager();
         ComponentName componentName = new ComponentName(MainActivity.this, SmsListener.class);
         pm.setComponentEnabledSetting(componentName, state, PackageManager.DONT_KILL_APP);
-        Snackbar.make(layout, "Started background service", Snackbar.LENGTH_SHORT);
+    }
+
+    private void smsService(boolean enabled) {
+        int state;
+        if (enabled)
+            state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+        else
+            state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+
+        PackageManager pm = MainActivity.this.getPackageManager();
+        ComponentName componentName = new ComponentName(MainActivity.this, GracefulSmsService.class);
+        pm.setComponentEnabledSetting(componentName, state, PackageManager.DONT_KILL_APP);
     }
 
     private boolean checkPermissions() {
@@ -140,7 +152,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == ID_RECEIVE_SMS) {
-            if (grantResults.length >= 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+
+            boolean check = grantResults.length >= 3;
+            for (int i = 0; i < 3; i++) {
+                check &= grantResults[i] == PackageManager.PERMISSION_GRANTED;
+            }
+
+            if (check) {
                 Log.i(LOG_TAG, "SMS permissions granted");
 
                 if (enableRequested) {

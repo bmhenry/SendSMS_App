@@ -41,7 +41,7 @@ public class SmsListener extends  BroadcastReceiver {
 
                 Thread t = new Thread(new TcpClient("192.168.15.17", 5000, data));
                 t.start();
-                t.join();
+                t.join(); // wait for thread to finish before releasing wakelock
             }
 
         } catch (Exception e) {

@@ -3,7 +3,6 @@ package gracefulcamel.sendsms;
 import android.util.Log;
 
 import java.io.DataOutputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
@@ -15,7 +14,7 @@ import java.util.Enumeration;
 public class TcpClient implements Runnable {
 
     String localIP;
-    int localPort; //= 6016;
+    int localPort; //= 5000;
     String destIP;
     int destPort;
 
@@ -45,7 +44,6 @@ public class TcpClient implements Runnable {
     public void start() {
         try {
             socket = new Socket(destIP, destPort);
-            socket.setKeepAlive(true);
 
             localIP = socket.getLocalAddress().toString();
             localPort = socket.getLocalPort();

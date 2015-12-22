@@ -1,35 +1,45 @@
 package gracefulcamel.sendsms;
 
-import android.app.IntentService;
-import android.content.BroadcastReceiver;
+
+import gracefulcamel.sendsms.Client;
+
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
+import android.util.Log;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
 
 /**
  * Created by Brandon on 12/13/2015.
  */
-public class GracefulSmsService extends IntentService {
-
-    public static final String LOG_TAG = "GracefulSmsService:";
+public class GracefulSmsService extends Service {
+    public static final String LOG_TAG = "GracefulSmsService";
+    private Client client;
 
     // handles status updates
-
-
-    public GracefulSmsService()
-    {
-        super("GracefulSmsService");
+    @Override
+    public void onCreate() {
+        startServer();
     }
 
-    /**
-     *  In an IntentService, onHandleIntent is run on a background thread.
-     *  It broadcasts its current status using the LocalBroadcastManager
-     * @param workIntent The Intent that starts the IntentService
-     */
     @Override
-    protected void onHandleIntent(Intent workIntent)
-    {
-        // gets data from incoming intent
-        String dataString = workIntent.getDataString();
+    public IBinder onBind(Intent intent) {
+        return null; // no binding, for now
+    }
 
-        // do work here based on contents of data string
+    @Override
+    public void onDestroy() {
+        stopServer();
+    }
+
+    private void startServer() {
+        client = new Client("192.168.15.17", 5000);
+    }
+
+    private void stopServer() {
+        client.stop();
     }
 }
