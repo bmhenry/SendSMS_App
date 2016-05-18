@@ -2,6 +2,7 @@ package gracefulcamel.sendsms;
 
 import android.Manifest;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         // start or stop receiver depending on enable state
         if (checkPermissions())
-            smsReceiver(enabled);
+            smsService(enabled);
 
         // deal with toggle button
         enableButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -78,12 +79,14 @@ public class MainActivity extends AppCompatActivity {
                     enabled = false;
                 }
 
-                smsReceiver(enabled);
                 smsService(enabled);
             }
         });
     }
 
+    /**
+     * Save enabled/disabled state when app is left
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -94,30 +97,22 @@ public class MainActivity extends AppCompatActivity {
         edit.apply();
     }
 
-    private void smsReceiver(boolean enabled) {
-        int state;
-        if (enabled)
-            state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-        else
-            state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-
-        PackageManager pm = MainActivity.this.getPackageManager();
-        ComponentName componentName = new ComponentName(MainActivity.this, SmsListener.class);
-        pm.setComponentEnabledSetting(componentName, state, PackageManager.DONT_KILL_APP);
-    }
-
+    /**
+     * Starts and stops the service depending on whether service should be enabled
+     * @param boolean enabled
+     */
     private void smsService(boolean enabled) {
-        int state;
+        // starts and stops the service
         if (enabled)
-            state = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+            startService(new Intent(this, GracefulSmsService.class));
         else
-            state = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-
-        PackageManager pm = MainActivity.this.getPackageManager();
-        ComponentName componentName = new ComponentName(MainActivity.this, GracefulSmsService.class);
-        pm.setComponentEnabledSetting(componentName, state, PackageManager.DONT_KILL_APP);
+            stopService(new Intent(this, GracefulSmsService.class));
     }
 
+    /**
+     * Check whether required permissions are granted
+     * @return boolean
+     */
     private boolean checkPermissions() {
         // check once
         int check;
@@ -148,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .show();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

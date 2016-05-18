@@ -24,21 +24,14 @@
         //http://stackoverflow.com/questions/7089313/android-listen-for-incoming-sms-messages
         // uses SmsListener
         // checks that whoever sent the broadcast has the proper permissions
-        <receiver
-            android:name=".SmsListener"
-            android:permission="android.permission.BROADCAST_SMS"
-            android:exported="true"
-            android:enabled="false"> // starts disabled, enabled with in-app button
-            <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
-            </intent-filter>
-        </receiver>
         //http://developer.android.com/training/run-background-service/create-service.html
+
         // uses GracefulSmsService
         <service
             android:name=".GracefulSmsService"
             android:exported="false"
-            android:enabled="false"/>
+            android:enabled="true"
+            android:permission="android.permission.BROADCAST_SMS"/>
     </application>
 
 </manifest>
