@@ -16,7 +16,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Created by Brandon on 12/13/2015.
+ * Service to look for incoming SMS and forward it to the GracefulClient
  */
 public class GracefulSmsService extends Service {
     // receiver to be registered
@@ -60,7 +60,7 @@ public class GracefulSmsService extends Service {
     }
 
     private void startServer() {
-        client = new GracefulClient("192.168.0.105", 5000);
+        client = new GracefulClient(8000);
     }
 
     private void stopServer() {
