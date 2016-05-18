@@ -39,6 +39,7 @@ public class GracefulSmsService extends Service {
         smsListener = new SmsListener();
         intentFilter = new IntentFilter();
         intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+        intentFilter.addAction("android.provider.Telephony.SMS_SENT");
 
         registerReceiver(smsListener, intentFilter);
         Log.i(LOG_TAG, "Listener added");

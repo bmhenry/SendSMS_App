@@ -4,12 +4,12 @@ import android.text.format.DateFormat;
 import android.util.Log;
 
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Queue;
 
@@ -32,13 +32,14 @@ public class GracefulClient {
 
     Thread listenThread;
 
-    Queue<String> sendString;
+    Queue<String> sendQueue;
 
 
     public GracefulClient(int port) {
         this.PORT = port;
         manager = SmsManager.getDefault();
-        sendString = null;
+        sendQueue = new LinkedList<>();
+        should_run = true;
 
         start();
     }
@@ -54,6 +55,7 @@ public class GracefulClient {
             socket = null;
             try {
                 server = new ServerSocket(PORT);
+                Log.i(LOG_TAG, "Created server on port " + Integer.toString(PORT));
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Exception creating server -- " + e);
             }
@@ -61,6 +63,7 @@ public class GracefulClient {
             while (should_run && !Thread.currentThread().isInterrupted()) {
                 try {
                     socket = server.accept();
+                    Log.i(LOG_TAG, "Opened socket to " + socket.getRemoteSocketAddress().toString());
                     CommRunnable comm = new CommRunnable(parent, socket);
                     new Thread(comm).start();
                 } catch (IOException e) {
@@ -122,16 +125,16 @@ public class GracefulClient {
                         }
                     }
                 } catch (IOException e) {
-                    Log.e(LOG_TAG, "Error reading from input stream" + e);
+                    Log.e(LOG_TAG, "Error reading from input stream -- " + e);
                 }
 
                 try {
-                    if (sendString.poll() != null) {
-                        String message = sendString.remove();
+                    if (sendQueue != null && sendQueue.size() > 0) {
+                        String message = sendQueue.remove();
                         outputStream.writeBytes(message);
                     }
                 } catch (IOException e) {
-                    Log.e(LOG_TAG, "Error sending over TCP" + e);
+                    Log.e(LOG_TAG, "Error sending over TCP -- " + e);
                 }
             }
 
@@ -141,7 +144,7 @@ public class GracefulClient {
                 outputStream.close();
                 socket.close();
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error closing socket" + e);
+                Log.e(LOG_TAG, "Error closing socket -- " + e);
             }
         }
     }
@@ -151,12 +154,12 @@ public class GracefulClient {
             listenThread = new Thread(new ListenerRunnable(this));
             listenThread.start();
         } catch (Exception e) {
-            Log.i(LOG_TAG, "Error starting thread to listen on socket");
+            Log.i(LOG_TAG, "Error starting thread to listen on socket -- " + e);
         }
     }
 
     public void send(String str) {
-        sendString.add(str);
+        sendQueue.add(str);
     }
 
     public void stop() {
@@ -166,7 +169,7 @@ public class GracefulClient {
             try {
                 server.close();
             } catch (Exception e) {
-                Log.i(LOG_TAG, "Couldn't close server");
+                Log.i(LOG_TAG, "Couldn't close server -- " + e);
             }
         }
     }
