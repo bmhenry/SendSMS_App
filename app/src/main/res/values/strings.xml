@@ -7,7 +7,7 @@
     <string name="disclaimerString">
         SendSMS must be enabled and given the proper permissions to work:\n
         - SMS permissions to be told when you get or send messages\n
-        - Contacts to match the texts with the person you\'re messaging
+        - Contacts to match the texts with the person you\'re messaging\n
         - Internet to then send this to your computer over the local network
     </string>
     <string name="permissionBar">Permissions are required to forward texts</string>

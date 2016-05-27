@@ -105,9 +105,10 @@ public class GracefulClient {
                             String data = new String(buffer);
                             Log.i(LOG_TAG, "Data from PC:\n" + data);
 
-                            String[] split_data = data.split("\n", 2);
+                            String[] split_data = data.split("\n", 3);
                             String phoneNum = split_data[0];
-                            String message = split_data[1];
+                            String name = split_data[1];
+                            String message = split_data[2];
                             message = message.substring(0, message.length() - 2);
 
                             manager.sendTextMessage(phoneNum, null, message, null, null);
@@ -116,6 +117,7 @@ public class GracefulClient {
                             String returnData = "SENT\n";
                             returnData += datetime + "\n";
                             returnData += phoneNum + "\n";
+                            returnData += name + "\n";
                             returnData += message + Character.toString((char) 0x1d) + "\n";
 
                             parent.send(returnData);
@@ -130,8 +132,9 @@ public class GracefulClient {
 
                 try {
                     if (sendQueue != null && sendQueue.size() > 0) {
-                        String message = sendQueue.remove();
+                        String message = sendQueue.peek();
                         outputStream.writeBytes(message);
+                        sendQueue.remove();
                     }
                 } catch (IOException e) {
                     Log.e(LOG_TAG, "Error sending over TCP -- " + e);

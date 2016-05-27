@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     // ID for sms permission
     private static final int ID_RECEIVE_SMS = 0;
-    String[] PERMISSIONS = new String[] {Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS};
+    String[] PERMISSIONS = new String[] {Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS};
 
     // layout of the activity
     private View layout;
